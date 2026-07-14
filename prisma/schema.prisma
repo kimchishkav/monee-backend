@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  CARD
+  CASH
+  DEPOSIT
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+model User {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  email                String   @unique
+  passwordHash         String
+  currency             String   @default("USD")
+  monthlySpendingLimit Decimal? @db.Decimal(14, 2)
+  theme                String   @default("light")
+  avatarBase64         String?  @db.LongText
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  accounts     Account[]
+  transactions Transaction[]
+}
+
+model Account {
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      AccountType
+  balance   Decimal     @default(0) @db.Decimal(14, 2)
+  notes     String?     @db.Text
+  isFrozen  Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  transactionsAsSource      Transaction[] @relation("SourceAccount")
+  transactionsAsDestination Transaction[] @relation("DestinationAccount")
+
+  @@index([userId])
+}
+
+model Transaction {
+  id          Int             @id @default(autoincrement())
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        TransactionType
+  amount      Decimal         @db.Decimal(14, 2)
+  category    String?
+  accountId   Int
+  account     Account         @relation("SourceAccount", fields: [accountId], references: [id], onDelete: Restrict)
+  toAccountId Int?
+  toAccount   Account?        @relation("DestinationAccount", fields: [toAccountId], references: [id], onDelete: Restrict)
+  note        String?         @db.Text
+  date        DateTime
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([userId, date])
+  @@index([accountId])
+  @@index([toAccountId])
+  @@index([userId, type, category])
+}

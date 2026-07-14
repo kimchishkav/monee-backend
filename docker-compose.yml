@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: monee-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: monee
+      MYSQL_USER: monee
+      MYSQL_PASSWORD: monee
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - monee-mysql-data:/var/lib/mysql
+
+volumes:
+  monee-mysql-data:
