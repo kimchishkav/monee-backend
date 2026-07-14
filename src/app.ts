@@ -48,3 +48,5 @@ app.use("/api/profile", profileRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
+
+export default app;
