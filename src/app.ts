@@ -9,6 +9,7 @@ import { transactionsRouter } from "./modules/transactions/transactions.routes";
 import { dashboardRouter } from "./modules/dashboard/dashboard.routes";
 import { statisticsRouter } from "./modules/statistics/statistics.routes";
 import { profileRouter } from "./modules/profile/profile.routes";
+import { currencyRouter } from "./modules/currency/currency.routes";
 
 export const app = express();
 
@@ -45,6 +46,7 @@ app.use("/api/transactions", transactionsRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/statistics", statisticsRouter);
 app.use("/api/profile", profileRouter);
+app.use("/api/currency", currencyRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
