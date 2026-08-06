@@ -87,6 +87,7 @@ export async function updateAccount(
       ...(input.name !== undefined ? { name: input.name } : {}),
       ...(input.type !== undefined ? { type: input.type } : {}),
       ...(input.notes !== undefined ? { notes: input.notes } : {}),
+      ...(input.balance !== undefined ? { balance: input.balance } : {}),
     },
   });
   return toAccountDto(account);

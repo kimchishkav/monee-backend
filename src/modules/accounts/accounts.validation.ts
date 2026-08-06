@@ -13,6 +13,7 @@ export const updateAccountSchema = z.object({
   name: z.string().trim().min(1).max(100).optional(),
   type: accountTypeSchema.optional(),
   notes: z.string().trim().max(1000).nullable().optional(),
+  balance: z.coerce.number().finite().optional(),
 });
 
 export const unfreezeAccountSchema = z.object({
